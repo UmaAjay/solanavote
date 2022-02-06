@@ -66,7 +66,7 @@ export async function getVotes(): Promise<number[]> {
     if (votesInfo === null) {
         throw new Error('Error: cannot find the greeted account');
     }
-    const greeting = borsh.deserialize(VoteSchema, VoteAccount, votesInfo.data);
-    console.log(votesPubkey.toBase58(), 'has been greeted', greeting.yes, 'time(s)',);
-    return [greeting.yes, greeting.abstained, greeting.no];
+    const votes = borsh.deserialize(VoteSchema, VoteAccount, votesInfo.data);
+    console.log(votesPubkey.toBase58(), `votes: yes = ${votes.yes}, abstained = ${votes.abstained}, no = ${votes.no}`);
+    return [votes.yes, votes.abstained, votes.no];
 }
