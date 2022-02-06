@@ -1,5 +1,7 @@
 import * as borsh from 'borsh';
-import {Connection, PublicKey} from "@solana/web3.js";
+import {Connection, PublicKey, Transaction, TransactionInstruction} from "@solana/web3.js";
+import {Buffer} from "buffer";
+import {PhantomProvider} from "../wallet/wallet";
 
 export let connection: Connection;
 export const programId = new PublicKey('EHqdqk9g59SWebexZ2saoHPaxNRgxNsp83kJxCCMwRRF');
@@ -38,7 +40,7 @@ class VoteAccount {
 }
 
 /**
- * Borsh schema definition for greeting accounts
+ * Borsh schema definition for votes account
  */
 const VoteSchema = new Map([
     [
@@ -56,7 +58,7 @@ const VoteSchema = new Map([
 
 
 /**
- * Report the number of times the greeted account has been said hello to
+ * Request votes state from Solana
  */
 export async function getVotes(): Promise<number[]> {
     if (!connection) {
@@ -69,4 +71,26 @@ export async function getVotes(): Promise<number[]> {
     const votes = borsh.deserialize(VoteSchema, VoteAccount, votesInfo.data);
     console.log(votesPubkey.toBase58(), `votes: yes = ${votes.yes}, abstained = ${votes.abstained}, no = ${votes.no}`);
     return [votes.yes, votes.abstained, votes.no];
+}
+
+/**
+ * Store vote in Solana
+ */
+export const sendVote = async (choice: number, provider: PhantomProvider) => {
+    if (!provider) {
+        console.error('Provider not found');
+        return;
+    }
+    const instruction = new TransactionInstruction({
+        keys: [{pubkey: votesPubkey, isSigner: false, isWritable: true}],
+        programId,
+        data: Buffer.from([choice]),
+    });
+
+    const transaction = new Transaction().add(instruction);
+    transaction.recentBlockhash = (await connection.getRecentBlockhash()).blockhash;
+    transaction.feePayer = provider.publicKey;
+    const {signature} = await provider.signAndSendTransaction(transaction);
+    console.log(`Signature: ${JSON.stringify(signature)}`)
+    await connection.confirmTransaction(signature as string);
 }

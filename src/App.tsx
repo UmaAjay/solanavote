@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import {PublicKey, Transaction, TransactionInstruction,} from "@solana/web3.js";
-import {Buffer} from 'buffer';
-import {connection, getVotes, votesPubkey, programId} from "./program/program";
+import {PublicKey,} from "@solana/web3.js";
+import {getVotes, sendVote} from "./program/program";
 import {getProvider, PhantomProvider} from "./wallet/wallet";
 import './App.css';
 
@@ -23,23 +22,7 @@ function App() {
     }
 
     const vote = (choice: number) => {
-        const sendVote = async () => {
-            const instruction = new TransactionInstruction({
-                keys: [{pubkey: votesPubkey, isSigner: false, isWritable: true}],
-                programId,
-                data: Buffer.from([choice]),
-            });
-
-            const transaction = new Transaction().add(instruction);
-            transaction.recentBlockhash = (await connection.getRecentBlockhash()).blockhash;
-            transaction.feePayer = provider?.publicKey;
-            // @ts-ignore
-            const {signature} = await provider?.signAndSendTransaction(transaction);
-            console.log(`Signature: ${JSON.stringify(signature)}`)
-            await connection.confirmTransaction(signature as string);
-        }
-
-        sendVote().then(()=> {
+        sendVote(choice, provider as PhantomProvider).then(()=> {
             fetchBlockchain()
                 .catch(console.error);
         });
