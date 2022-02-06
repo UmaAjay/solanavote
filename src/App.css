@@ -36,3 +36,33 @@
     transform: rotate(360deg);
   }
 }
+
+a {
+    color: white;
+}
+
+.twitter-link {
+    color: white;
+    font-size: 16px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+button {
+  font-size: 16px;
+  padding: 15px;
+  font-weight: bold;
+  border-radius: 5px;
+}
+
+.VoteButtons {
+  display: flex;
+  width: 300px;
+  justify-content: space-between;
+}
+
+.VoteResults {
+  display: flex;
+  width: 300px;
+  justify-content: space-around;
+}
