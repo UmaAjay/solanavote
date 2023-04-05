@@ -12,9 +12,7 @@ function getRpcUrl(): string {
     return 'https://api.devnet.solana.com';
 }
 
-/**
- * Establish a connection to the cluster
- */
+
 export async function establishConnection(): Promise<void> {
     const rpcUrl = getRpcUrl();
     connection = new Connection(rpcUrl, 'confirmed');
@@ -22,9 +20,7 @@ export async function establishConnection(): Promise<void> {
     console.log('Connection to cluster established:', rpcUrl, version);
 }
 
-/**
- * The state of a vote account managed by the vote program
- */
+
 class VoteAccount {
     yes = 0;
     abstained = 0;
@@ -39,9 +35,7 @@ class VoteAccount {
     }
 }
 
-/**
- * Borsh schema definition for votes account
- */
+
 const VoteSchema = new Map([
     [
         VoteAccount,
@@ -57,9 +51,6 @@ const VoteSchema = new Map([
 ]);
 
 
-/**
- * Request votes state from Solana
- */
 export async function getVotes(): Promise<number[]> {
     if (!connection) {
         throw new Error(`We have no connection`);
@@ -73,9 +64,6 @@ export async function getVotes(): Promise<number[]> {
     return [votes.yes, votes.abstained, votes.no];
 }
 
-/**
- * Store vote in Solana
- */
 export const sendVote = async (choice: number, provider: PhantomProvider) => {
     if (!provider) {
         console.error('Provider not found');

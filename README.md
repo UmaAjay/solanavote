@@ -1,1 +1,0 @@
-### React app for Solana Vote program 

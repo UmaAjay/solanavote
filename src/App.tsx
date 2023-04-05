@@ -59,11 +59,11 @@ function App() {
                 {
                     wallet && (
                         <>
-                            <h3>Are you vote for peace in all world?</h3>
+                            <h3> Most corrupted party in india ?</h3>
                             <div className="VoteButtons">
-                                <button onClick={() => vote(0)}>Yes</button>
+                                <button onClick={() => vote(0)}>bjp</button>
                                 <button onClick={() => vote(1)}>Don't know</button>
-                                <button onClick={() => vote(2)}>No</button>
+                                <button onClick={() => vote(2)}>congress</button>
                             </div>
                             <div className="VoteResults">
                                 <p id="yes">{votes[0]}</p>
