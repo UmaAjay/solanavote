@@ -8,7 +8,7 @@ function App() {
     const [provider, setProvider] = useState<PhantomProvider | undefined>(undefined);
     const [wallet, setWallet] = useState<PublicKey | undefined>(undefined);
     const [votes, setVotes] = useState<number[]>([0, 0, 0]);
-
+    
     const connectWallet = async () => {
         if (!wallet) {
             const key = await provider?.connect();
@@ -21,11 +21,14 @@ function App() {
         }
     }
 
+    const [disable, setDisable] = useState(false);
     const vote = (choice: number) => {
         sendVote(choice, provider as PhantomProvider).then(()=> {
             fetchBlockchain()
                 .catch(console.error);
         });
+        setDisable(true);
+        localStorage.setItem("disableAll", JSON.stringify(true));
     }
 
     const fetchBlockchain = async () => {
@@ -44,9 +47,16 @@ function App() {
 
     }, []);
 
+    useEffect(() => {
+        if (disable) {
+          localStorage.setItem("disableAll", JSON.stringify(true));
+        }
+      }, [disable]);
+
     return (
         <div className="App">
             <header className="App-header">
+                <h3>Cast your Vote in our decentrtalized voting system</h3>
                 <h2>Connect to Solana wallet and make your choice</h2>
                 {provider && (
                     <button
@@ -59,11 +69,11 @@ function App() {
                 {
                     wallet && (
                         <>
-                            <h3> Most corrupted party in india ?</h3>
+                            <h3>Which party do you wish to vote</h3>
                             <div className="VoteButtons">
-                                <button onClick={() => vote(0)}>bjp</button>
-                                <button onClick={() => vote(1)}>Don't know</button>
-                                <button onClick={() => vote(2)}>congress</button>
+                                <button disabled={disable} onClick={() => vote(0)}>Bjp</button>
+                                <button disabled={disable} onClick={() => vote(1)}>NOTA</button>
+                                <button disabled={disable} onClick={() => vote(2)}>Congress</button>
                             </div>
                             <div className="VoteResults">
                                 <p id="yes">{votes[0]}</p>
@@ -82,6 +92,35 @@ function App() {
                 )}
 
             </header>
+            <footer id="footer" className="footer">
+
+
+
+        <div className="footer-legal text-center">
+            <div className="container d-flex flex-column flex-lg-row justify-content-center justify-content-lg-between align-items-center">
+
+            <div className="d-flex flex-column align-items-center align-items-lg-start">
+                <div className="copyright">
+                    &copy; Copyright <strong><span>@2023</span></strong>. All Rights Reserved
+                </div>
+                <div className="credits">
+
+                    <a href="https://bootstrapmade.com/">Shashank and yadu</a>
+                </div>
+            </div>
+
+            <div className="social-links order-first order-lg-last mb-3 mb-lg-0">
+                <a href="#" className="twitter"><i className="bi bi-twitter"></i></a>
+                <a href="#" className="facebook"><i className="bi bi-facebook"></i></a>
+                <a href="#" className="instagram"><i className="bi bi-instagram"></i></a>
+                <a href="#" className="google-plus"><i className="bi bi-skype"></i></a>
+                <a href="#" className="linkedin"><i className="bi bi-linkedin"></i></a>
+            </div>
+
+        </div>
+    </div>
+
+</footer>
         </div>
     );
 }
