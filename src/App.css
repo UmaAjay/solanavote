@@ -14,14 +14,17 @@
 }
 
 .App-header {
-  background-color: #282c34;
+  background-image: url(https://appinventiv.com/wp-content/uploads/sites/1/2020/11/Role-of-blockchain-in-voting.gif);
+  
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-  color: white;
+  color:darkred;
 }
 
 .App-link {
@@ -38,7 +41,7 @@
 }
 
 a {
-    color: white;
+    color: black;
 }
 
 .twitter-link {
@@ -57,12 +60,13 @@ button {
 
 .VoteButtons {
   display: flex;
-  width: 300px;
+  width: 500px;
   justify-content: space-between;
 }
 
 .VoteResults {
   display: flex;
-  width: 300px;
+  width: 600px;
   justify-content: space-around;
+  font-weight: bold;
 }
